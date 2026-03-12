@@ -4,18 +4,9 @@
     'category': 'Quality/Software',
     'summary': 'Structured, auditable Quality Management System for software companies',
     'description': """
-A robust Quality Management System (QMS) specifically designed for software development companies.
-It covers the complete software lifecycle, from requirements to final documentation.
-
-Key Features:
-- **Requirements Management**: Business, functional, non-functional, and compliance requirements.
-- **Design & Specification**: High-level design and detailed functional/technical specifications.
-- **Test Management**: Test plans, test cases, and test run execution with traceability.
-- **Issue / Defect Management**: Full defect lifecycle integrated with test execution.
-- **Release & Change Management**: Structured release planning and change request workflows.
-- **Risk Management**: Track and mitigate technical and organizational risks.
-- **Documentation Management**: Versioned QMS documents, including user manuals.
-- **ISO 9001 Alignment**: Designed to provide the documented evidence required for ISO 9001 certification.
+<p>A robust Quality Management System (QMS) specifically designed for software development companies.</p>
+<p>It covers the complete software lifecycle, from requirements to final documentation.</p>
+<p>ISO 9001 aligned and built for Odoo 19 CE.</p>
     """,
     'author': 'Aries Software',
     'website': 'https://odoo.aries-software.net',
