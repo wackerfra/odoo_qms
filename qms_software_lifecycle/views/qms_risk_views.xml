@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qms_risk_tree" model="ir.ui.view">
+        <field name="name">qms.risk.tree</field>
+        <field name="model">qms.risk</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="title"/>
+                <field name="project_id"/>
+                <field name="category"/>
+                <field name="probability"/>
+                <field name="impact"/>
+                <field name="risk_grade" widget="badge" decoration-danger="risk_grade == 'High'" decoration-warning="risk_grade == 'Medium'" decoration-info="risk_grade == 'Low'"/>
+                <field name="state" widget="badge" decoration-info="state == 'identified'" decoration-success="state == 'mitigated'" decoration-muted="state == 'closed'" decoration-danger="state == 'occurred'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_qms_risk_form" model="ir.ui.view">
+        <field name="name">qms.risk.form</field>
+        <field name="model">qms.risk</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_mitigate" type="object" string="Mark Mitigated" 
+                            invisible="state != 'identified'" class="oe_highlight"/>
+                    <button name="action_occur" type="object" string="Mark Occurred" 
+                            invisible="state == 'closed'"/>
+                    <button name="action_close" type="object" string="Close Risk" 
+                            invisible="state == 'closed'"/>
+                    <button name="action_set_identified" type="object" string="Re-identify" 
+                            invisible="state == 'identified'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="identified,mitigated,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="title" placeholder="Risk Title"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="category"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="probability"/>
+                            <field name="impact"/>
+                            <field name="risk_grade"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Describe the risk..."/>
+                        </page>
+                        <page string="Mitigation Plan" name="mitigation">
+                            <field name="mitigation_plan" placeholder="Describe the mitigation plan..."/>
+                        </page>
+                        <page string="Traceability" name="traceability">
+                            <group>
+                                <field name="requirement_ids" widget="many2many_tags"/>
+                                <field name="change_request_ids" widget="many2many_tags"/>
+                                <field name="release_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_qms_risk_search" model="ir.ui.view">
+        <field name="name">qms.risk.search</field>
+        <field name="model">qms.risk</field>
+        <field name="arch" type="xml">
+            <search string="Search Risks">
+                <field name="title" string="Title"/>
+                <field name="project_id" string="Project"/>
+                <field name="user_id" string="Owner"/>
+                <filter string="My Risks" name="filter_my_risks" domain="[('user_id', '=', uid)]"/>
+                <filter string="High Risks" name="filter_high_risks" domain="[('risk_grade', '=', 'High')]"/>
+                <group>
+                    <filter string="Project" name="filter_group_by_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Category" name="filter_group_by_category" context="{'group_by': 'category'}"/>
+                    <filter string="Status" name="filter_group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Risk Grade" name="filter_group_by_risk_grade" context="{'group_by': 'risk_grade'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_qms_risk" model="ir.actions.act_window">
+        <field name="name">Risks</field>
+        <field name="res_model">qms.risk</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Identify your first risk!
+            </p>
+        </field>
+    </record>
+</odoo>

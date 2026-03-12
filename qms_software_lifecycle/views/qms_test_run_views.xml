@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qms_test_run_tree" model="ir.ui.view">
+        <field name="name">qms.test_run.tree</field>
+        <field name="model">qms.test_run</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="test_plan_id"/>
+                <field name="date"/>
+                <field name="environment"/>
+                <field name="user_id"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'in_progress'" decoration-success="state == 'completed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_qms_test_run_form" model="ir.ui.view">
+        <field name="name">qms.test_run.form</field>
+        <field name="model">qms.test_run</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start" type="object" string="Start Test" 
+                            invisible="state != 'draft'" class="oe_highlight"/>
+                    <button name="action_pass_all" type="object" string="Pass All" 
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_complete" type="object" string="Complete" 
+                            invisible="state != 'in_progress'" class="oe_highlight"/>
+                    <button name="action_set_draft" type="object" string="Set to Draft" 
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Test Run Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="test_plan_id"/>
+                            <field name="project_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="environment"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Execution Lines" name="lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="test_case_id" readonly="1"/>
+                                    <field name="status" widget="badge" decoration-success="status == 'pass'" decoration-danger="status == 'fail'" decoration-warning="status == 'blocked'" decoration-muted="status == 'not_run'"/>
+                                    <field name="notes"/>
+                                    <field name="defect_ids" widget="many2many_tags"/>
+                                    <button name="action_create_defect" type="object" icon="fa-bug" title="Create Defect" invisible="status != 'fail'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Summary" name="summary">
+                            <field name="summary" placeholder="Provide a summary of the test run..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_qms_test_run_search" model="ir.ui.view">
+        <field name="name">qms.test_run.search</field>
+        <field name="model">qms.test_run</field>
+        <field name="arch" type="xml">
+            <search string="Search Test Runs">
+                <field name="name" string="Test Run Name"/>
+                <field name="test_plan_id" string="Test Plan"/>
+                <field name="project_id" string="Project"/>
+                <field name="user_id" string="Tester"/>
+                <filter string="My Test Runs" name="filter_my_test_runs" domain="[('user_id', '=', uid)]"/>
+                <filter string="In Progress" name="filter_in_progress" domain="[('state', '=', 'in_progress')]"/>
+                <group>
+                    <filter string="Test Plan" name="filter_group_by_test_plan" context="{'group_by': 'test_plan_id'}"/>
+                    <filter string="Project" name="filter_group_by_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Tester" name="filter_group_by_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Status" name="filter_group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_qms_test_run" model="ir.actions.act_window">
+        <field name="name">Test Runs</field>
+        <field name="res_model">qms.test_run</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Start your first test run!
+            </p>
+        </field>
+    </record>
+</odoo>

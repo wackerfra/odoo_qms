@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qms_baseline_tree" model="ir.ui.view">
+        <field name="name">qms.baseline.tree</field>
+        <field name="model">qms.baseline</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="date"/>
+                <field name="release_id"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'locked'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_qms_baseline_form" model="ir.ui.view">
+        <field name="name">qms.baseline.form</field>
+        <field name="model">qms.baseline</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_lock" type="object" string="Lock Baseline" 
+                            invisible="state != 'draft'" class="oe_highlight" groups="qms_software_lifecycle.group_qms_manager"/>
+                    <button name="action_set_draft" type="object" string="Set to Draft" 
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,locked"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Baseline Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <field name="release_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Snapshot" name="snapshot">
+                            <group string="Requirements">
+                                <field name="requirement_ids" widget="many2many_tags" nolabel="1"/>
+                            </group>
+                            <group string="Test Cases">
+                                <field name="test_case_ids" widget="many2many_tags" nolabel="1"/>
+                            </group>
+                            <group string="Documents">
+                                <field name="document_ids" widget="many2many_tags" nolabel="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_qms_baseline_search" model="ir.ui.view">
+        <field name="name">qms.baseline.search</field>
+        <field name="model">qms.baseline</field>
+        <field name="arch" type="xml">
+            <search string="Search Baselines">
+                <field name="name" string="Baseline Name"/>
+                <field name="project_id" string="Project"/>
+                <field name="release_id" string="Release"/>
+                <filter string="Locked" name="filter_locked" domain="[('state', '=', 'locked')]"/>
+                <group>
+                    <filter string="Project" name="filter_group_by_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Release" name="filter_group_by_release" context="{'group_by': 'release_id'}"/>
+                    <filter string="Status" name="filter_group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_qms_baseline" model="ir.actions.act_window">
+        <field name="name">Baselines</field>
+        <field name="res_model">qms.baseline</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Capture your first QMS baseline!
+            </p>
+        </field>
+    </record>
+</odoo>

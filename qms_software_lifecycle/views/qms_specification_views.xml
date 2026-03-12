@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qms_specification_tree" model="ir.ui.view">
+        <field name="name">qms.specification.tree</field>
+        <field name="model">qms.specification</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="title"/>
+                <field name="project_id"/>
+                <field name="type"/>
+                <field name="version"/>
+                <field name="state" widget="badge" decoration-info="state in ('draft', 'review')" decoration-success="state == 'approved'" decoration-muted="state == 'obsolete'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_qms_specification_form" model="ir.ui.view">
+        <field name="name">qms.specification.form</field>
+        <field name="model">qms.specification</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_review" type="object" string="Submit for Review" 
+                            invisible="state != 'draft'" class="oe_highlight"/>
+                    <button name="action_approve" type="object" string="Approve" 
+                            invisible="state != 'review'" class="oe_highlight" groups="qms_software_lifecycle.group_qms_manager"/>
+                    <button name="action_obsolete" type="object" string="Obsolete" 
+                            invisible="state != 'approved'"/>
+                    <button name="action_set_draft" type="object" string="Set to Draft" 
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,review,approved,obsolete"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="title" placeholder="Specification Title"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="type"/>
+                        </group>
+                        <group>
+                            <field name="version"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content" name="content">
+                            <field name="content" placeholder="Write your specification content here..."/>
+                        </page>
+                        <page string="Traceability" name="traceability">
+                            <group>
+                                <field name="requirement_ids" widget="many2many_tags"/>
+                                <field name="document_ids" widget="many2many_tags"/>
+                                <field name="change_request_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_qms_specification_search" model="ir.ui.view">
+        <field name="name">qms.specification.search</field>
+        <field name="model">qms.specification</field>
+        <field name="arch" type="xml">
+            <search string="Search Specifications">
+                <field name="title" string="Title"/>
+                <field name="project_id" string="Project"/>
+                <field name="type" string="Type"/>
+                <filter string="Approved" name="filter_approved" domain="[('state', '=', 'approved')]"/>
+                <group>
+                    <filter string="Project" name="filter_group_by_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Type" name="filter_group_by_type" context="{'group_by': 'type'}"/>
+                    <filter string="Status" name="filter_group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_qms_specification" model="ir.actions.act_window">
+        <field name="name">Specifications</field>
+        <field name="res_model">qms.specification</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first design or specification!
+            </p>
+        </field>
+    </record>
+</odoo>

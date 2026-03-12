@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- QMS Project -->
+        <record id="demo_qms_project" model="qms.project">
+            <field name="name">Odoo ERP Implementation</field>
+            <field name="code">ERP-2026</field>
+            <field name="state">active</field>
+            <field name="quality_objectives">
+                <p>1. Ensure 100% requirement coverage.</p>
+                <p>2. Maintain defect density below 0.1 per requirement.</p>
+                <p>3. Achieve 95% test pass rate for each release.</p>
+            </field>
+        </record>
+
+        <!-- Requirements -->
+        <record id="demo_req_1" model="qms.requirement">
+            <field name="name">REQ-001</field>
+            <field name="title">User Authentication</field>
+            <field name="project_id" ref="demo_qms_project"/>
+            <field name="type">functional</field>
+            <field name="priority">2</field>
+            <field name="state">approved</field>
+            <field name="description">Users must be able to log in securely using email and password.</field>
+            <field name="acceptance_criteria">
+                <ul>
+                    <li>Login form should have email and password fields.</li>
+                    <li>Successful login redirects to dashboard.</li>
+                    <li>Failed login shows error message.</li>
+                </ul>
+            </field>
+        </record>
+
+        <record id="demo_req_2" model="qms.requirement">
+            <field name="name">REQ-002</field>
+            <field name="title">Multi-factor Authentication</field>
+            <field name="project_id" ref="demo_qms_project"/>
+            <field name="type">compliance</field>
+            <field name="priority">3</field>
+            <field name="state">review</field>
+            <field name="description">MFA is required for all administrative users.</field>
+        </record>
+
+        <!-- Specifications -->
+        <record id="demo_spec_1" model="qms.specification">
+            <field name="title">Auth Architecture</field>
+            <field name="project_id" ref="demo_qms_project"/>
+            <field name="type">hld</field>
+            <field name="state">approved</field>
+            <field name="content">
+                <p>High-level design for authentication using Odoo standard identity management.</p>
+            </field>
+            <field name="requirement_ids" eval="[(4, ref('demo_req_1'))]"/>
+        </record>
+
+        <!-- Test Cases -->
+        <record id="demo_tc_1" model="qms.test_case">
+            <field name="name">TC-001</field>
+            <field name="title">Verify Successful Login</field>
+            <field name="project_id" ref="demo_qms_project"/>
+            <field name="type">functional</field>
+            <field name="priority">2</field>
+            <field name="state">approved</field>
+            <field name="pre_conditions">User 'demo' exists in the system.</field>
+            <field name="test_steps">
+                <ol>
+                    <li>Navigate to login page.</li>
+                    <li>Enter 'demo' as email.</li>
+                    <li>Enter password.</li>
+                    <li>Click Login.</li>
+                </ol>
+            </field>
+            <field name="expected_results">User is redirected to the dashboard.</field>
+            <field name="requirement_ids" eval="[(4, ref('demo_req_1'))]"/>
+        </record>
+
+        <!-- Test Plan -->
+        <record id="demo_test_plan" model="qms.test_plan">
+            <field name="name">Sprint 1 Test Plan</field>
+            <field name="project_id" ref="demo_qms_project"/>
+            <field name="scope">feature</field>
+            <field name="state">active</field>
+            <field name="test_case_ids" eval="[(4, ref('demo_tc_1'))]"/>
+        </record>
+
+        <!-- Release -->
+        <record id="demo_release" model="qms.release">
+            <field name="name">v1.0.0-beta</field>
+            <field name="project_id" ref="demo_qms_project"/>
+            <field name="type">minor</field>
+            <field name="state">testing</field>
+            <field name="release_notes">
+                <p>Initial beta release with authentication features.</p>
+            </field>
+            <field name="requirement_ids" eval="[(4, ref('demo_req_1'))]"/>
+        </record>
+
+        <!-- Risk -->
+        <record id="demo_risk_1" model="qms.risk">
+            <field name="title">Security Vulnerability in Auth</field>
+            <field name="project_id" ref="demo_qms_project"/>
+            <field name="category">security</field>
+            <field name="probability">1</field>
+            <field name="impact">3</field>
+            <field name="state">identified</field>
+            <field name="mitigation_plan">Perform regular penetration testing and use standard libraries.</field>
+            <field name="requirement_ids" eval="[(4, ref('demo_req_1'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_qms_project_tree" model="ir.ui.view">
+        <field name="name">qms.project.tree</field>
+        <field name="model">qms.project</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'active'" decoration-muted="state == 'archived'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_qms_project_form" model="ir.ui.view">
+        <field name="name">qms.project.form</field>
+        <field name="model">qms.project</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_activate_project" type="object" string="Activate" 
+                            invisible="state != 'draft'" class="oe_highlight"/>
+                    <button name="action_archive_project" type="object" string="Archive" 
+                            invisible="state != 'active'"/>
+                    <button name="action_set_draft" type="object" string="Set to Draft" 
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,archived"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Project Name"/>
+                        </h1>
+                        <h2>
+                            <field name="code" placeholder="Project Code"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="project_id"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Quality Objectives" name="objectives">
+                            <field name="quality_objectives" placeholder="Define quality objectives for this project..."/>
+                        </page>
+                        <page string="Requirements" name="requirements">
+                            <field name="requirement_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="title"/>
+                                    <field name="type"/>
+                                    <field name="priority"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Releases" name="releases">
+                            <field name="release_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="release_date"/>
+                                    <field name="type"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_qms_project_search" model="ir.ui.view">
+        <field name="name">qms.project.search</field>
+        <field name="model">qms.project</field>
+        <field name="arch" type="xml">
+            <search string="Search QMS Projects">
+                <field name="name" string="Project Name"/>
+                <field name="code" string="Project Code"/>
+                <field name="user_id" string="Quality Manager"/>
+                <filter string="My Projects" name="filter_my_projects" domain="[('user_id', '=', uid)]"/>
+                <filter string="Active Projects" name="filter_state_active" domain="[('state', '=', 'active')]"/>
+                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Manager" name="filter_group_by_manager" context="{'group_by': 'user_id'}"/>
+                    <filter string="Status" name="filter_group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_qms_project" model="ir.actions.act_window">
+        <field name="name">QMS Projects</field>
+        <field name="res_model">qms.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first QMS project!
+            </p>
+        </field>
+    </record>
+</odoo>

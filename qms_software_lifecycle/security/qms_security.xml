@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="module_category_qms" model="ir.module.category">
+            <field name="name">Quality Management System (QMS)</field>
+            <field name="description">Helps you manage software quality lifecycle.</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="res_groups_privilege_qms" model="res.groups.privilege">
+            <field name="name">Quality Management System (QMS)</field>
+            <field name="category_id" ref="module_category_qms"/>
+        </record>
+
+        <record id="group_qms_read_only" model="res.groups">
+            <field name="name">Read-Only (Auditor)</field>
+            <field name="privilege_id" ref="res_groups_privilege_qms"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="group_qms_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="privilege_id" ref="res_groups_privilege_qms"/>
+            <field name="implied_ids" eval="[(4, ref('group_qms_read_only'))]"/>
+        </record>
+
+        <record id="group_qms_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="privilege_id" ref="res_groups_privilege_qms"/>
+            <field name="implied_ids" eval="[(4, ref('group_qms_user'))]"/>
+            <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+    </data>
+</odoo>

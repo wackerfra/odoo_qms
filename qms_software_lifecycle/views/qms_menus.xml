@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top-level Menu -->
+    <menuitem id="menu_qms_root"
+              name="Quality"
+              web_icon="qms_software_lifecycle,static/description/icon.png"
+              sequence="50"/>
+
+    <menuitem id="menu_qms_software"
+              name="Software QMS"
+              parent="menu_qms_root"
+              sequence="10"/>
+
+    <!-- Actions in Menu -->
+    <menuitem id="menu_qms_project"
+              name="Projects"
+              parent="menu_qms_software"
+              action="action_qms_project"
+              sequence="10"/>
+
+    <menuitem id="menu_qms_requirement"
+              name="Requirements"
+              parent="menu_qms_software"
+              action="action_qms_requirement"
+              sequence="20"/>
+
+    <menuitem id="menu_qms_specification"
+              name="Specifications"
+              parent="menu_qms_software"
+              action="action_qms_specification"
+              sequence="30"/>
+
+    <menuitem id="menu_qms_test_plan"
+              name="Test Plans"
+              parent="menu_qms_software"
+              action="action_qms_test_plan"
+              sequence="40"/>
+
+    <menuitem id="menu_qms_test_case"
+              name="Test Cases"
+              parent="menu_qms_software"
+              action="action_qms_test_case"
+              sequence="50"/>
+
+    <menuitem id="menu_qms_test_run"
+              name="Test Runs"
+              parent="menu_qms_software"
+              action="action_qms_test_run"
+              sequence="60"/>
+
+    <menuitem id="menu_qms_defect"
+              name="Defects"
+              parent="menu_qms_software"
+              action="action_qms_defect"
+              sequence="70"/>
+
+    <menuitem id="menu_qms_change_request"
+              name="Change Requests"
+              parent="menu_qms_software"
+              action="action_qms_change_request"
+              sequence="80"/>
+
+    <menuitem id="menu_qms_release"
+              name="Releases"
+              parent="menu_qms_software"
+              action="action_qms_release"
+              sequence="90"/>
+
+    <menuitem id="menu_qms_document"
+              name="Documents"
+              parent="menu_qms_software"
+              action="action_qms_document"
+              sequence="100"/>
+
+    <menuitem id="menu_qms_user_manual"
+              name="User Manuals"
+              parent="menu_qms_software"
+              action="action_qms_user_manual"
+              sequence="110"/>
+
+    <menuitem id="menu_qms_risk"
+              name="Risks"
+              parent="menu_qms_software"
+              action="action_qms_risk"
+              sequence="120"/>
+
+    <menuitem id="menu_qms_baseline"
+              name="Baselines"
+              parent="menu_qms_software"
+              action="action_qms_baseline"
+              sequence="130"/>
+</odoo>
