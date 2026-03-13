@@ -71,6 +71,29 @@
         </field>
     </record>
 
+    <record id="view_qms_risk_graph" model="ir.ui.view">
+        <field name="name">qms.risk.graph</field>
+        <field name="model">qms.risk</field>
+        <field name="arch" type="xml">
+            <graph string="Risks Analysis" type="bar" sample="1">
+                <field name="project_id"/>
+                <field name="risk_grade"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_qms_risk_pivot" model="ir.ui.view">
+        <field name="name">qms.risk.pivot</field>
+        <field name="model">qms.risk</field>
+        <field name="arch" type="xml">
+            <pivot string="Risks Analysis" sample="1">
+                <field name="project_id" type="row"/>
+                <field name="category" type="col"/>
+                <field name="risk_grade" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="view_qms_risk_search" model="ir.ui.view">
         <field name="name">qms.risk.search</field>
         <field name="model">qms.risk</field>
@@ -94,7 +117,7 @@
     <record id="action_qms_risk" model="ir.actions.act_window">
         <field name="name">Risks</field>
         <field name="res_model">qms.risk</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,pivot,graph</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Identify your first risk!

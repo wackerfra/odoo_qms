@@ -77,6 +77,29 @@
         </field>
     </record>
 
+    <record id="view_qms_release_graph" model="ir.ui.view">
+        <field name="name">qms.release.graph</field>
+        <field name="model">qms.release</field>
+        <field name="arch" type="xml">
+            <graph string="Releases Analysis" type="bar" sample="1">
+                <field name="project_id"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_qms_release_pivot" model="ir.ui.view">
+        <field name="name">qms.release.pivot</field>
+        <field name="model">qms.release</field>
+        <field name="arch" type="xml">
+            <pivot string="Releases Analysis" sample="1">
+                <field name="project_id" type="row"/>
+                <field name="type" type="col"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="view_qms_release_search" model="ir.ui.view">
         <field name="name">qms.release.search</field>
         <field name="model">qms.release</field>
@@ -98,7 +121,7 @@
     <record id="action_qms_release" model="ir.actions.act_window">
         <field name="name">Releases</field>
         <field name="res_model">qms.release</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,pivot,graph</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Plan your first release!

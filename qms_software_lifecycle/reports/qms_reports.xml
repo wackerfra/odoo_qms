@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report Actions -->
+    <record id="action_report_qms_requirement_spec" model="ir.actions.report">
+        <field name="name">Requirement Specification</field>
+        <field name="model">qms.project</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">qms_software_lifecycle.report_qms_requirement_spec</field>
+        <field name="report_file">qms_software_lifecycle.report_qms_requirement_spec</field>
+        <field name="print_report_name">'Requirement Spec - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_qms_project"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_qms_test_run" model="ir.actions.report">
+        <field name="name">Test Execution Report</field>
+        <field name="model">qms.test_run</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">qms_software_lifecycle.report_qms_test_run</field>
+        <field name="report_file">qms_software_lifecycle.report_qms_test_run</field>
+        <field name="print_report_name">'Test Run - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_qms_test_run"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_qms_risk_register" model="ir.actions.report">
+        <field name="name">Risk Register</field>
+        <field name="model">qms.project</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">qms_software_lifecycle.report_qms_risk_register</field>
+        <field name="report_file">qms_software_lifecycle.report_qms_risk_register</field>
+        <field name="print_report_name">'Risk Register - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_qms_project"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_qms_release_notes" model="ir.actions.report">
+        <field name="name">Release Notes</field>
+        <field name="model">qms.release</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">qms_software_lifecycle.report_qms_release_notes</field>
+        <field name="report_file">qms_software_lifecycle.report_qms_release_notes</field>
+        <field name="print_report_name">'Release Notes - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_qms_release"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_qms_defect_summary" model="ir.actions.report">
+        <field name="name">Defect Summary</field>
+        <field name="model">qms.project</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">qms_software_lifecycle.report_qms_defect_summary</field>
+        <field name="report_file">qms_software_lifecycle.report_qms_defect_summary</field>
+        <field name="print_report_name">'Defect Summary - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_qms_project"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QWeb Templates -->
+    <template id="report_qms_requirement_spec">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <h2>Requirement Specification: <span t-field="o.name"/></h2>
+                        <div class="row mt32 mb32">
+                            <div class="col-3">
+                                <strong>Project Code:</strong>
+                                <p t-field="o.code"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Quality Manager:</strong>
+                                <p t-field="o.user_id"/>
+                            </div>
+                        </div>
+
+                        <h3>Requirements List</h3>
+                        <table class="table table-sm o_main_table mt16">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Type</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.requirement_ids" t-as="req">
+                                    <tr>
+                                        <td><span t-field="req.name"/></td>
+                                        <td><span t-field="req.title"/></td>
+                                        <td><span t-field="req.type"/></td>
+                                        <td><span t-field="req.priority"/></td>
+                                        <td><span t-field="req.state"/></td>
+                                    </tr>
+                                    <tr t-if="req.description">
+                                        <td colspan="5" class="small text-muted">
+                                            <strong>Description:</strong> <span t-field="req.description"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_qms_test_run">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <h2>Test Execution Report: <span t-field="o.name"/></h2>
+                        <div class="row mt32 mb32">
+                            <div class="col-3">
+                                <strong>Project:</strong>
+                                <p t-field="o.project_id.name"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Date:</strong>
+                                <p t-field="o.date"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Tester:</strong>
+                                <p t-field="o.user_id"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Environment:</strong>
+                                <p t-field="o.environment"/>
+                            </div>
+                        </div>
+
+                        <h3>Execution Details</h3>
+                        <table class="table table-sm o_main_table mt16">
+                            <thead>
+                                <tr>
+                                    <th>Test Case</th>
+                                    <th>Status</th>
+                                    <th>Notes</th>
+                                    <th>Defects</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.line_ids" t-as="line">
+                                    <tr>
+                                        <td>[<span t-field="line.test_case_id.name"/>] <span t-field="line.test_case_id.title"/></td>
+                                        <td>
+                                            <span t-if="line.status == 'pass'" class="badge badge-success" style="color:green;">PASS</span>
+                                            <span t-if="line.status == 'fail'" class="badge badge-danger" style="color:red;">FAIL</span>
+                                            <span t-if="line.status == 'blocked'" class="badge badge-warning" style="color:orange;">BLOCKED</span>
+                                            <span t-if="line.status == 'not_run'" class="badge badge-secondary" style="color:grey;">NOT RUN</span>
+                                        </td>
+                                        <td><span t-field="line.notes"/></td>
+                                        <td>
+                                            <t t-foreach="line.defect_ids" t-as="defect">
+                                                <span t-field="defect.name"/><br/>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <div t-if="o.summary" class="mt32">
+                            <strong>Summary:</strong>
+                            <p t-field="o.summary"/>
+                        </div>
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_qms_risk_register">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <h2>Risk Register: <span t-field="o.name"/></h2>
+                        <div class="row mt32 mb32">
+                            <div class="col-3">
+                                <strong>Project Code:</strong>
+                                <p t-field="o.code"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Responsible:</strong>
+                                <p t-field="o.user_id"/>
+                            </div>
+                        </div>
+
+                        <h3>Identified Risks</h3>
+                        <table class="table table-sm o_main_table mt16">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Prob.</th>
+                                    <th>Impact</th>
+                                    <th>Grade</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.risk_ids" t-as="risk">
+                                    <tr>
+                                        <td><span t-field="risk.title"/></td>
+                                        <td><span t-field="risk.category"/></td>
+                                        <td><span t-field="risk.probability"/></td>
+                                        <td><span t-field="risk.impact"/></td>
+                                        <td>
+                                            <span t-field="risk.risk_grade"/>
+                                        </td>
+                                        <td><span t-field="risk.state"/></td>
+                                    </tr>
+                                    <tr t-if="risk.mitigation_plan">
+                                        <td colspan="6" class="small">
+                                            <strong>Mitigation:</strong> <span t-field="risk.mitigation_plan"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_qms_release_notes">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="text-center">
+                            <h1>Release Notes</h1>
+                            <h2><span t-field="o.project_id.name"/> - <span t-field="o.name"/></h2>
+                        </div>
+
+                        <div class="row mt32 mb32">
+                            <div class="col-6">
+                                <strong>Release Date:</strong>
+                                <p t-field="o.release_date"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Type:</strong>
+                                <p t-field="o.type"/>
+                            </div>
+                        </div>
+
+                        <div t-if="o.release_notes" class="mt32">
+                            <h3>Overview</h3>
+                            <div t-field="o.release_notes"/>
+                        </div>
+
+                        <div class="mt32" t-if="o.requirement_ids">
+                            <h3>New Features / Requirements</h3>
+                            <ul>
+                                <t t-foreach="o.requirement_ids" t-as="req">
+                                    <li><strong><span t-field="req.name"/></strong>: <span t-field="req.title"/></li>
+                                </t>
+                            </ul>
+                        </div>
+
+                        <div class="mt32" t-if="o.defect_ids">
+                            <h3>Resolved Defects</h3>
+                            <ul>
+                                <t t-foreach="o.defect_ids" t-as="defect">
+                                    <li><strong><span t-field="defect.name"/></strong>: <span t-field="defect.title"/></li>
+                                </t>
+                            </ul>
+                        </div>
+
+                        <div class="mt32" t-if="o.change_request_ids">
+                            <h3>Implemented Changes</h3>
+                            <ul>
+                                <t t-foreach="o.change_request_ids" t-as="cr">
+                                    <li><strong><span t-field="cr.name"/></strong>: <span t-field="cr.title"/></li>
+                                </t>
+                            </ul>
+                        </div>
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_qms_defect_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <h2>Defect Summary: <span t-field="o.name"/></h2>
+                        <div class="row mt32 mb32">
+                            <div class="col-3">
+                                <strong>Project Code:</strong>
+                                <p t-field="o.code"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Quality Manager:</strong>
+                                <p t-field="o.user_id"/>
+                            </div>
+                        </div>
+
+                        <h3>Reported Defects</h3>
+                        <table class="table table-sm o_main_table mt16">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Sev.</th>
+                                    <th>Prio.</th>
+                                    <th>Status</th>
+                                    <th>Assignee</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.defect_ids" t-as="defect">
+                                    <tr>
+                                        <td><span t-field="defect.name"/></td>
+                                        <td><span t-field="defect.title"/></td>
+                                        <td><span t-field="defect.severity"/></td>
+                                        <td><span t-field="defect.priority"/></td>
+                                        <td><span t-field="defect.state"/></td>
+                                        <td><span t-field="defect.user_id"/></td>
+                                    </tr>
+                                    <tr t-if="defect.root_cause">
+                                        <td colspan="6" class="small">
+                                            <strong>Root Cause:</strong> <span t-field="defect.root_cause"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

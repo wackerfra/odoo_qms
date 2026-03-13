@@ -7,9 +7,14 @@
               sequence="50"/>
 
     <menuitem id="menu_qms_software"
-              name="Software QMS"
+              name="Operations"
               parent="menu_qms_root"
               sequence="10"/>
+
+    <menuitem id="menu_qms_reporting"
+              name="Reporting"
+              parent="menu_qms_root"
+              sequence="20"/>
 
     <!-- Actions in Menu -->
     <menuitem id="menu_qms_project"
@@ -89,4 +94,41 @@
               parent="menu_qms_software"
               action="action_qms_baseline"
               sequence="130"/>
+
+    <!-- Reporting Submenus -->
+    <menuitem id="menu_qms_report_requirement"
+              name="Requirements Analysis"
+              parent="menu_qms_reporting"
+              action="action_qms_requirement"
+              sequence="10"/>
+
+    <menuitem id="menu_qms_report_test_run"
+              name="Test Runs Analysis"
+              parent="menu_qms_reporting"
+              action="action_qms_test_run"
+              sequence="20"/>
+
+    <menuitem id="menu_qms_report_defect"
+              name="Defects Analysis"
+              parent="menu_qms_reporting"
+              action="action_qms_defect"
+              sequence="30"/>
+
+    <menuitem id="menu_qms_report_risk"
+              name="Risks Analysis"
+              parent="menu_qms_reporting"
+              action="action_qms_risk"
+              sequence="40"/>
+
+    <menuitem id="menu_qms_report_release"
+              name="Releases Analysis"
+              parent="menu_qms_reporting"
+              action="action_qms_release"
+              sequence="50"/>
+
+    <menuitem id="menu_qms_report_change_request"
+              name="Change Requests Analysis"
+              parent="menu_qms_reporting"
+              action="action_qms_change_request"
+              sequence="60"/>
 </odoo>

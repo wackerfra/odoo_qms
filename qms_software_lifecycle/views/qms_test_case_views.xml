@@ -69,6 +69,29 @@
         </field>
     </record>
 
+    <record id="view_qms_test_case_graph" model="ir.ui.view">
+        <field name="name">qms.test_case.graph</field>
+        <field name="model">qms.test_case</field>
+        <field name="arch" type="xml">
+            <graph string="Test Cases Analysis" type="bar" sample="1">
+                <field name="project_id"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_qms_test_case_pivot" model="ir.ui.view">
+        <field name="name">qms.test_case.pivot</field>
+        <field name="model">qms.test_case</field>
+        <field name="arch" type="xml">
+            <pivot string="Test Cases Analysis" sample="1">
+                <field name="project_id" type="row"/>
+                <field name="type" type="col"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="view_qms_test_case_search" model="ir.ui.view">
         <field name="name">qms.test_case.search</field>
         <field name="model">qms.test_case</field>
@@ -91,7 +114,7 @@
     <record id="action_qms_test_case" model="ir.actions.act_window">
         <field name="name">Test Cases</field>
         <field name="res_model">qms.test_case</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,pivot,graph</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Define your first test case!

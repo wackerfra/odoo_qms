@@ -27,6 +27,7 @@
         'views/qms_risk_views.xml',
         'views/qms_baseline_views.xml',
         'views/qms_menus.xml',
+        'reports/qms_reports.xml',
         'data/qms_data.xml',
     ],
     'demo': [

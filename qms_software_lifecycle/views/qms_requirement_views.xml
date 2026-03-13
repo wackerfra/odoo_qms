@@ -125,6 +125,28 @@
         </field>
     </record>
 
+    <record id="view_qms_requirement_graph" model="ir.ui.view">
+        <field name="name">qms.requirement.graph</field>
+        <field name="model">qms.requirement</field>
+        <field name="arch" type="xml">
+            <graph string="Requirements Analysis" type="bar" sample="1">
+                <field name="project_id"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_qms_requirement_pivot" model="ir.ui.view">
+        <field name="name">qms.requirement.pivot</field>
+        <field name="model">qms.requirement</field>
+        <field name="arch" type="xml">
+            <pivot string="Requirements Analysis" sample="1">
+                <field name="project_id" type="row"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="view_qms_requirement_search" model="ir.ui.view">
         <field name="name">qms.requirement.search</field>
         <field name="model">qms.requirement</field>
@@ -150,7 +172,7 @@
     <record id="action_qms_requirement" model="ir.actions.act_window">
         <field name="name">Requirements</field>
         <field name="res_model">qms.requirement</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">kanban,list,form,pivot,graph</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Define your first software requirement!
