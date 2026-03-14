@@ -37,6 +37,6 @@
     'application': True,
     'license': 'LGPL-3',
     'images': ['static/description/banner.png'],
-    'price': 199.0,
+    'price': 249.0,
     'currency': 'EUR',
 }
