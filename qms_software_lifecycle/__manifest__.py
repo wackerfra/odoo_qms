@@ -10,7 +10,7 @@
     """,
     'author': 'Aries Software',
     'website': 'https://odoo.aries-software.net',
-    'depends': ['base', 'mail', 'project'],
+    'depends': ['base', 'mail', 'project', 'portal'],
     'data': [
         'security/qms_security.xml',
         'security/ir.model.access.csv',
@@ -26,6 +26,7 @@
         'views/qms_document_views.xml',
         'views/qms_risk_views.xml',
         'views/qms_baseline_views.xml',
+        'views/qms_portal_templates.xml',
         'views/qms_menus.xml',
         'reports/qms_reports.xml',
         'data/qms_data.xml',

@@ -38,3 +38,6 @@ access_qms_risk_manager,access_qms_risk_manager,model_qms_risk,group_qms_manager
 access_qms_baseline_read_only,access_qms_baseline_read_only,model_qms_baseline,group_qms_read_only,1,0,0,0
 access_qms_baseline_user,access_qms_baseline_user,model_qms_baseline,group_qms_user,1,1,1,1
 access_qms_baseline_manager,access_qms_baseline_manager,model_qms_baseline,group_qms_manager,1,1,1,1
+access_qms_project_portal,access_qms_project_portal,model_qms_project,base.group_portal,1,1,0,0
+access_qms_requirement_portal,access_qms_requirement_portal,model_qms_requirement,base.group_portal,1,1,0,0
+access_qms_defect_portal,access_qms_defect_portal,model_qms_defect,base.group_portal,1,1,1,0

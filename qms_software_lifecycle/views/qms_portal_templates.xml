@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_home_menu_qms" name="Portal layout : QMS menu entries" inherit_id="portal.portal_breadcrumbs" priority="30">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'qms_project' or project" t-attf-class="breadcrumb-item #{'active' if not project and not requirement and not defect else ''}">
+                <a t-if="project or requirement or defect" t-att-href="'/my/qms/projects'">QMS Projects</a>
+                <t t-else="">QMS Projects</t>
+            </li>
+            <li t-if="project" t-attf-class="breadcrumb-item #{'active' if not requirement and not defect else ''}">
+                <a t-if="requirement or defect" t-att-href="project.access_url"><t t-out="project.name"/></a>
+                <t t-else="" t-out="project.name"/>
+            </li>
+            <li t-if="requirement" class="breadcrumb-item active">
+                <t t-out="requirement.name"/>
+            </li>
+            <li t-if="defect" class="breadcrumb-item active">
+                <t t-out="defect.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home" name="Show QMS Projects" inherit_id="portal.portal_my_home" priority="50">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_service_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_service_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/web/static/img/folder.svg'"/>
+                <t t-set="title">QMS Projects</t>
+                <t t-set="text">Manage and follow your Quality Management projects</t>
+                <t t-set="url" t-value="'/my/qms/projects'"/>
+                <t t-set="placeholder_count" t-value="'qms_project_count'"/>
+                <t t-set="config_card" t-value="True"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_my_qms_projects" name="My QMS Projects">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">QMS Projects</t>
+            </t>
+            <t t-if="not projects">
+                <div class="alert alert-warning" role="alert">
+                    There are no QMS projects.
+                </div>
+            </t>
+            <t t-if="projects" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Project</th>
+                        <th>Code</th>
+                        <th class="text-end">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="projects" t-as="project">
+                        <td><a t-att-href="project.access_url"><t t-out="project.name"/></a></td>
+                        <td><t t-out="project.code"/></td>
+                        <td class="text-end">
+                            <span t-attf-class="badge rounded-pill #{'text-bg-info' if project.state == 'draft' else 'text-bg-success' if project.state == 'active' else 'text-bg-secondary'}">
+                                <span t-field="project.state"/>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </t>
+            <div t-if="pager" class="o_portal_pager d-flex justify-content-center">
+                <t t-call="portal.pager"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_qms_project" name="My QMS Project">
+        <t t-call="portal.portal_layout">
+            <t t-if="project.state == 'archived'" t-set="o_portal_fullwidth_alert">
+                This project is archived.
+            </t>
+            <div class="card">
+                <div class="card-header bg-white">
+                    <div class="row g-0">
+                        <div class="col-12">
+                            <h5 class="d-flex mb-1 mb-md-0">
+                                <span t-field="project.name" class="text-truncate"/>
+                                <small class="text-muted d-none d-md-inline"> (#<span t-field="project.code"/>)</small>
+                                <span class="ms-auto badge rounded-pill text-bg-info">
+                                    <span t-field="project.state"/>
+                                </span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-12 col-md-6" t-if="project.user_id">
+                            <strong>Quality Manager:</strong> <span t-field="project.user_id.name"/>
+                        </div>
+                        <div class="col-12 col-md-6" t-if="project.partner_id">
+                            <strong>Customer:</strong> <span t-field="project.partner_id.name"/>
+                        </div>
+                    </div>
+                    <div class="row mt-3" t-if="project.quality_objectives">
+                        <div class="col-12">
+                            <strong>Quality Objectives:</strong>
+                            <div t-field="project.quality_objectives" class="mt-2"/>
+                        </div>
+                    </div>
+
+                    <hr/>
+                    <h5 class="mb-3">Requirements</h5>
+                    <t t-if="project.requirement_ids">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="project.requirement_ids" t-as="req">
+                                        <tr>
+                                            <td><a t-att-href="req.access_url"><t t-out="req.name"/></a></td>
+                                            <td><t t-out="req.title"/></td>
+                                            <td><span t-field="req.state"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                    <p t-else="" class="text-muted">No requirements found.</p>
+
+                    <hr/>
+                    <div class="d-flex align-items-center mb-3">
+                        <h5 class="mb-0">Defects</h5>
+                        <button type="button" class="btn btn-primary btn-sm ms-auto" data-bs-toggle="modal" data-bs-target="#modal_create_defect" t-if="not project.state == 'archived'">
+                            Report Defect
+                        </button>
+                    </div>
+
+                    <div role="dialog" class="modal fade" id="modal_create_defect">
+                        <div class="modal-dialog">
+                            <form t-attf-action="/my/qms/projects/#{project.id}/defect/create" method="post" class="modal-content">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Report New Defect</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="title" class="form-label">Title</label>
+                                        <input type="text" name="title" class="form-control" required="1"/>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 mb-3">
+                                            <label for="severity" class="form-label">Severity</label>
+                                            <select name="severity" class="form-select">
+                                                <option value="0">Low</option>
+                                                <option value="1">Minor</option>
+                                                <option value="2" selected="1">Major</option>
+                                                <option value="3">Critical</option>
+                                                <option value="4">Blocker</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <label for="priority" class="form-label">Priority</label>
+                                            <select name="priority" class="form-select">
+                                                <option value="0">Low</option>
+                                                <option value="1" selected="1">Medium</option>
+                                                <option value="2">High</option>
+                                                <option value="3">Urgent</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea name="description" class="form-control" rows="4"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Report Defect</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <t t-if="project.defect_ids">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Severity</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="project.defect_ids" t-as="def_">
+                                        <tr>
+                                            <td><a t-att-href="def_.access_url"><t t-out="def_.name"/></a></td>
+                                            <td><t t-out="def_.title"/></td>
+                                            <td><span t-field="def_.severity"/></td>
+                                            <td><span t-field="def_.state"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                    <p t-else="" class="text-muted">No defects found.</p>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <h4>Communication History</h4>
+                <t t-call="portal.message_thread">
+                    <t t-set="object" t-value="project"/>
+                    <t t-set="token" t-value="project.access_token"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_qms_requirement" name="My QMS Requirement">
+        <t t-call="portal.portal_layout">
+            <div class="card">
+                <div class="card-header bg-white d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">Requirement: <span t-field="requirement.name"/> - <span t-field="requirement.title"/></h5>
+                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal_edit_requirement" t-if="not requirement.project_id.state == 'archived'">
+                        Edit Requirement
+                    </button>
+                </div>
+
+                <div role="dialog" class="modal fade" id="modal_edit_requirement">
+                    <div class="modal-dialog">
+                        <form t-attf-action="/my/qms/requirements/#{requirement.id}/save" method="post" class="modal-content">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit Requirement</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Title</label>
+                                    <input type="text" name="title" class="form-control" required="1" t-att-value="requirement.title"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="priority" class="form-label">Priority</label>
+                                    <select name="priority" class="form-select">
+                                        <option value="0" t-att-selected="requirement.priority == '0'">Low</option>
+                                        <option value="1" t-att-selected="requirement.priority == '1'">Medium</option>
+                                        <option value="2" t-att-selected="requirement.priority == '2'">High</option>
+                                        <option value="3" t-att-selected="requirement.priority == '3'">Critical</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea name="description" class="form-control" rows="4"><t t-out="requirement.description"/></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <strong>Project:</strong> <a t-att-href="requirement.project_id.access_url"><t t-out="requirement.project_id.name"/></a><br/>
+                            <strong>Type:</strong> <span t-field="requirement.type"/><br/>
+                            <strong>Priority:</strong> <span t-field="requirement.priority"/>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Status:</strong> <span t-field="requirement.state"/><br/>
+                            <strong>Version:</strong> <t t-out="requirement.version"/>
+                        </div>
+                    </div>
+                    <div class="mt-3" t-if="requirement.description">
+                        <strong>Description:</strong>
+                        <div t-field="requirement.description" class="mt-2 border p-3 bg-light rounded"/>
+                    </div>
+                    <div class="mt-4" t-if="requirement.acceptance_criteria">
+                        <strong>Acceptance Criteria:</strong>
+                        <div t-field="requirement.acceptance_criteria" class="mt-2 border p-3 bg-light rounded"/>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5">
+                <t t-call="portal.message_thread">
+                    <t t-set="object" t-value="requirement"/>
+                    <t t-set="token" t-value="requirement.access_token"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_qms_defect" name="My QMS Defect">
+        <t t-call="portal.portal_layout">
+            <div class="card">
+                <div class="card-header bg-white d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">Defect: <span t-field="defect.name"/> - <span t-field="defect.title"/></h5>
+                    <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modal_edit_defect">
+                        Edit Defect
+                    </button>
+                </div>
+
+                <div role="dialog" class="modal fade" id="modal_edit_defect">
+                    <div class="modal-dialog">
+                        <form t-attf-action="/my/qms/defects/#{defect.id}/save" method="post" class="modal-content">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit Defect</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Title</label>
+                                    <input type="text" name="title" class="form-control" required="1" t-att-value="defect.title"/>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label for="severity" class="form-label">Severity</label>
+                                        <select name="severity" class="form-select">
+                                            <option value="0" t-att-selected="defect.severity == '0'">Low</option>
+                                            <option value="1" t-att-selected="defect.severity == '1'">Minor</option>
+                                            <option value="2" t-att-selected="defect.severity == '2'">Major</option>
+                                            <option value="3" t-att-selected="defect.severity == '3'">Critical</option>
+                                            <option value="4" t-att-selected="defect.severity == '4'">Blocker</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="priority" class="form-label">Priority</label>
+                                        <select name="priority" class="form-select">
+                                            <option value="0" t-att-selected="defect.priority == '0'">Low</option>
+                                            <option value="1" t-att-selected="defect.priority == '1'">Medium</option>
+                                            <option value="2" t-att-selected="defect.priority == '2'">High</option>
+                                            <option value="3" t-att-selected="defect.priority == '3'">Urgent</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea name="description" class="form-control" rows="4"><t t-out="defect.description"/></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <strong>Project:</strong> <a t-att-href="defect.project_id.access_url"><t t-out="defect.project_id.name"/></a><br/>
+                            <strong>Severity:</strong> <span t-field="defect.severity"/><br/>
+                            <strong>Priority:</strong> <span t-field="defect.priority"/>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Status:</strong> <span t-field="defect.state"/><br/>
+                            <strong>Assigned To:</strong> <span t-field="defect.user_id.name"/>
+                        </div>
+                    </div>
+                    <div class="mt-3" t-if="defect.description">
+                        <strong>Description:</strong>
+                        <div t-field="defect.description" class="mt-2 border p-3 bg-light rounded"/>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5">
+                <t t-call="portal.message_thread">
+                    <t t-set="object" t-value="defect"/>
+                    <t t-set="token" t-value="defect.access_token"/>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -30,5 +30,59 @@
             <field name="implied_ids" eval="[(4, ref('group_qms_user'))]"/>
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
+
+        <!-- Record Rules -->
+        <record id="qms_project_company_rule" model="ir.rule">
+            <field name="name">QMS Project Multi-Company</field>
+            <field name="model_id" ref="model_qms_project"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="qms_project_portal_rule" model="ir.rule">
+            <field name="name">Portal Project: write access for partner/followers</field>
+            <field name="model_id" ref="model_qms_project"/>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="domain_force">[
+                '|',
+                    ('partner_id', '=', user.partner_id.id),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="qms_requirement_portal_rule" model="ir.rule">
+            <field name="name">Portal Requirement: write access for partner/followers</field>
+            <field name="model_id" ref="model_qms_requirement"/>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="domain_force">[
+                '|', '|',
+                    ('project_id.partner_id', '=', user.partner_id.id),
+                    ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="qms_defect_portal_rule" model="ir.rule">
+            <field name="name">Portal Defect: write/create access for partner/followers</field>
+            <field name="model_id" ref="model_qms_defect"/>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="domain_force">[
+                '|', '|',
+                    ('project_id.partner_id', '=', user.partner_id.id),
+                    ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                    ('message_partner_ids', 'in', [user.partner_id.id])
+            ]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
     </data>
 </odoo>

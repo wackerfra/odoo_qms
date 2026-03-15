@@ -64,8 +64,9 @@ class QmsChangeRequest(models.Model):
         self.ensure_one()
         self.write({'state': 'rejected'})
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'NEW') == 'NEW':
-            vals['name'] = self.env['ir.sequence'].next_by_code('qms.change_request') or 'CR-NEW'
-        return super(QmsChangeRequest, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'NEW') == 'NEW':
+                vals['name'] = self.env['ir.sequence'].next_by_code('qms.change_request') or 'CR-NEW'
+        return super(QmsChangeRequest, self).create(vals_list)

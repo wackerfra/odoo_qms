@@ -3,13 +3,33 @@ from odoo import models, fields, api
 class QmsRequirement(models.Model):
     _name = 'qms.requirement'
     _description = 'Software Requirement'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='ID / Code', required=True, tracking=True)
     title = fields.Char(string='Title', required=True, tracking=True)
     project_id = fields.Many2one('qms.project', string='QMS Project', required=True, tracking=True)
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user, tracking=True)
     
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for record in records:
+            if record.project_id.partner_id:
+                record.message_subscribe(partner_ids=record.project_id.partner_id.ids)
+        return records
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'project_id' in vals:
+            for record in self:
+                if record.project_id.partner_id:
+                    record.message_subscribe(partner_ids=record.project_id.partner_id.ids)
+        return res
+
+    def _compute_access_url(self):
+        for requirement in self:
+            requirement.access_url = f'/my/qms/requirements/{requirement.id}'
+
     type = fields.Selection([
         ('business', 'Business'),
         ('functional', 'Functional'),

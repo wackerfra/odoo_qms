@@ -23,16 +23,20 @@ class QmsTestRun(models.Model):
         ('completed', 'Completed')
     ], string='Status', default='draft', tracking=True)
 
-    @api.model
-    def create(self, vals):
-        res = super(QmsTestRun, self).create(vals)
-        if res.test_plan_id:
-            for test_case in res.test_plan_id.test_case_ids:
-                self.env['qms.test_run_line'].create({
-                    'test_run_id': res.id,
-                    'test_case_id': test_case.id,
-                })
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super(QmsTestRun, self).create(vals_list)
+        line_vals_list = []
+        for record in records:
+            if record.test_plan_id:
+                for test_case in record.test_plan_id.test_case_ids:
+                    line_vals_list.append({
+                        'test_run_id': record.id,
+                        'test_case_id': test_case.id,
+                    })
+        if line_vals_list:
+            self.env['qms.test_run_line'].create(line_vals_list)
+        return records
 
     def action_pass_all(self):
         self.line_ids.write({'status': 'pass'})

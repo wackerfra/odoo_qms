@@ -3,12 +3,16 @@ from odoo import models, fields, api
 class QmsDefect(models.Model):
     _name = 'qms.defect'
     _description = 'Software Defect'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='ID', required=True, copy=False, readonly=True, default=lambda self: 'NEW')
     title = fields.Char(string='Title', required=True, tracking=True)
     project_id = fields.Many2one('qms.project', string='QMS Project', required=True, tracking=True)
     
+    def _compute_access_url(self):
+        for defect in self:
+            defect.access_url = f'/my/qms/defects/{defect.id}'
+
     description = fields.Html(string='Description')
     
     severity = fields.Selection([
@@ -75,8 +79,21 @@ class QmsDefect(models.Model):
         self.ensure_one()
         self.write({'state': 'rejected'})
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'NEW') == 'NEW':
-            vals['name'] = self.env['ir.sequence'].next_by_code('qms.defect') or 'DEF-NEW'
-        return super(QmsDefect, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'NEW') == 'NEW':
+                vals['name'] = self.env['ir.sequence'].next_by_code('qms.defect') or 'DEF-NEW'
+        records = super(QmsDefect, self).create(vals_list)
+        for record in records:
+            if record.project_id.partner_id:
+                record.message_subscribe(partner_ids=record.project_id.partner_id.ids)
+        return records
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'project_id' in vals:
+            for record in self:
+                if record.project_id.partner_id:
+                    record.message_subscribe(partner_ids=record.project_id.partner_id.ids)
+        return res
